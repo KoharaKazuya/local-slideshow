@@ -1,0 +1,73 @@
+<!doctype html>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+<!-- Only for Slides -->
+<main>
+  <div class="slides-wrapper fullscreen">
+    <div id="slides" class="inactive"></div>
+  </div>
+  <div id="dropzone" class="inactive dropzone fullscreen">
+    <div class="drop-here page-icon">
+      <i class="material-icons">picture_as_pdf</i>
+      <div>Drag your PDF file and drop here.</div>
+    </div>
+  </div>
+</main>
+
+<div class="bottom-nav inactive" id="bottom-nav">
+  <a class="bottom-nav-button" id="js-show-setup-modal-button">
+    <i class="material-icons">phonelink_setup</i>
+    <div>Setup</div>
+  </a>
+  <a class="bottom-nav-button" id="js-fullscreen-button">
+    <i class="material-icons">settings_overscan</i>
+    <div>Fullscreen</div>
+  </a>
+  <a class="bottom-nav-button">
+    <i class="material-icons">live_help</i>
+    <div>Tutorial</div>
+  </a>
+  <a class="bottom-nav-button" href="/">
+    <i class="material-icons">clear</i>
+    <div>Reset</div>
+  </a>
+</div>
+
+<!-- Only for Controller -->
+<div id="touchzone" class="touchzone fullscreen inactive">
+  <div class="touch-here page-icon">
+    <i class="material-icons">touch_app</i>
+    <div>Swipe to flip through slides.</div>
+  </div>
+  <div class="progress fullscreen active" id="auth-progress">
+    <div class="progress-bar"></div>
+  </div>
+</div>
+
+<!-- setup dialog -->
+<div class="dialog-backdrop fullscreen" id="setup-dialog-backdrop"></div>
+<div class="dialog" id="setup-dialog">
+  <header class="dialog-title">Setup Link</header>
+  <main class="dialog-content">
+    <a id="control-link" target="_blank"></a>
+    <div id="setup-qrcode"></div>
+    <div>Open this link on your smartphone. Also you can open the link by <a href="https://en.wikipedia.org/wiki/QR_code" target="_blank">QR code</a>.</div>
+  </main>
+  <div class="progress fullscreen active" id="dialog-progress">
+    <div class="progress-bar"></div>
+  </div>
+</div>
+<!-- setup dialog -->
+<div class="dialog-backdrop fullscreen" id="message-dialog-backdrop"></div>
+<div class="dialog" id="message-dialog">
+  <main class="dialog-content">
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/screenfull.js/3.0.2/screenfull.min.js"></script>
+<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/04f46c6a0708418cb7b96fc563eacae0fbf77674/qrcode.min.js"></script>
