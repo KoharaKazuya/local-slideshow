@@ -1,15 +1,21 @@
 import io = require("socket.io-client");
+import { EventEmitter2 } from "eventemitter2";
 
 type MessageRoomJoined = {
   type: string;
   roomId: number;
 }
 
-export default class Sender {
+export default class Sender extends EventEmitter2 {
   private socket: SocketIOClient.Socket;
 
   constructor() {
+    super();
     this.socket = io("/");
+
+    this.socket.on("disconnect", () => this.emit("disconnect"));
+    this.socket.on("reconnect", () => this.emit("connect"));
+    this.socket.on("reconnect_failed", () => this.emit("lost"));
   }
 
   public auth(roomId: number): Promise<void> {
@@ -23,7 +29,7 @@ export default class Sender {
       setTimeout(reject, 10000);
     });
 
-    return Promise.race([authenticatedPromise, timeoutPromise]);
+    return Promise.race([authenticatedPromise, timeoutPromise]).then(() => this.emit("connect"));
   }
 
   public prevPage(): void {
