@@ -21,10 +21,8 @@ export default class ControllerPanel {
     this.hammer = new Hammer(touchable, { recognizers });
 
     this.hammer.on("tap", () => this.emit(ControlEvent.Next));
-    this.hammer.on("swipeleft", () => this.emit(ControlEvent.Prev));
-    this.hammer.on("swipedown", () => this.emit(ControlEvent.Prev));
-    this.hammer.on("swiperight", () => this.emit(ControlEvent.Next));
-    this.hammer.on("swipeup", () => this.emit(ControlEvent.Next));
+    this.hammer.on("swiperight", () => this.emit(ControlEvent.Prev));
+    this.hammer.on("swipeleft", () => this.emit(ControlEvent.Next));
 
     document.onkeydown = event => {
       if (event.shiftKey || event.ctrlKey || event.metaKey) {
@@ -32,10 +30,10 @@ export default class ControllerPanel {
       }
 
       const code = event.keyCode;
-      if (code === 37 || code === 38) {  // LEFT, UP
+      if (code === 37) {  // LEFT
         event.preventDefault();
         this.emit(ControlEvent.Prev);
-      } else if (code === 39 || code === 40) {  // RIGHT, DOWN
+      } else if (code === 39) {  // RIGHT
         event.preventDefault();
         this.emit(ControlEvent.Next);
       }
