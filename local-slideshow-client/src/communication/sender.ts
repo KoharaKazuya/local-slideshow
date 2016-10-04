@@ -24,6 +24,7 @@ export default class Sender extends EventEmitter2 {
         if (message.type === "ROOM_JOINED") { resolve(); }
       });
       this.socket.send({ type: "JOIN_ROOM", roomId });
+      this.socket.on("reconnect", () => this.socket.send({ type: "JOIN_ROOM", roomId }));
     });
     const timeoutPromise = new Promise((resolve, reject) => {
       setTimeout(reject, 10000);
