@@ -1,0 +1,10 @@
+@import "../variables";
+
+.message {
+  margin: 1em auto;
+}
+
+.next-button {
+  color: var(--accent-color);
+  cursor: pointer;
+}

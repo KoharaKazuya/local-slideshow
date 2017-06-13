@@ -4,13 +4,16 @@
   "author": "Kohara Kazuya <reflect.results@gmail.com>",
   "dependencies": {
     "circular-json": "^0.3.1",
-    "log4js": "^0.6.38",
+    "log4js": "^1.1.1",
     "node-static": "^0.7.8",
-    "socket.io": "^1.4.8"
+    "socket.io": "^2.0.3"
   },
   "devDependencies": {
-    "eslint": "^3.5.0",
+    "eslint": "^4.0.0",
     "nodemon": "^1.10.2"
+  },
+  "engine": {
+    "node": ">= 6.11.0"
   },
   "license": "MIT",
   "main": "lib/index.js",
