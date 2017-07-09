@@ -1,73 +1,65 @@
 <!doctype html>
+<head>
 
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>
+  .loading {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 48px;
+    height: 48px;
+    border-radius: 100%;
+    border: 2px solid gray;
+    border-bottom-color: transparent;
+    -webkit-animation: rotate 1s linear 0s infinite;
+            animation: rotate 1s linear 0s infinite;
+    opacity: 0;
+    transition: opacity 0.2s linear;
+  }
+  .loading.-show {
+    opacity: 1;
+  }
+  @keyframes rotate {
+      0% { -webkit-transform: rotate(  0deg); transform: rotate(  0deg); }
+     50% { -webkit-transform: rotate(180deg); transform: rotate(180deg); }
+    100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
+  }
+  .loading-container {
+    width: 100%;
+    height: 100%;
+  }
+  .loading-container > * {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+  }
+</style>
+<!-- Webpack を通すと CSS Modules ローカル化され、使えなくなるため直接ファイル化 -->
+<!--<link rel="stylesheet" href="/node_modules/pdf.js-controller/css/pdf-slide.css">-->
+<style>.pdf-textLayer>div ::selection,::selection{background:rgba(0,0,255,.3)}.pdf-slide-progress,.pdf-textLayer{position:absolute;left:0;top:0;right:0;bottom:0}::-moz-selection{background:rgba(0,0,255,.3)}.pdf-textLayer{color:#000;font-family:sans-serif;overflow:hidden}.pdf-textLayer>div{color:transparent;position:absolute;line-height:1;white-space:pre;cursor:text}.pdf-textLayer>div body{font-family:arial,verdana,sans-serif}.pdf-textLayer>div .pdfPage{position:relative;overflow:visible;border:1px solid #000}.pdf-textLayer>div .pdf-page{position:relative}.pdf-textLayer>div .pdfPage>canvas{position:absolute;top:0;left:0}.pdf-textLayer>div ::-moz-selection{background:rgba(0,0,255,.3)}.pdf-textLayer>div .pdf-textLayer{position:absolute;left:0;top:0;right:0;bottom:0;color:#000;font-family:sans-serif;overflow:hidden}.pdf-textLayer>div .pdf-textLayer>div{color:transparent;position:absolute;line-height:1;white-space:pre;cursor:text}.pdf-textLayer>div .pdf-annotationLayer a{display:block;position:absolute;height:100%;width:100%}.pdf-textLayer>div .pdf-annotationLayer a:hover{opacity:.2;background:#ff0;box-shadow:0 2px 10px #ff0}.pdf-textLayer>div .pdf-canvas{width:100%;height:100%;opacity:1;-webkit-transition:width .3s ease-in;-moz-transition:width .3s ease-in;-o-transition:width .3s ease-in;transition:width .3s ease-in}.pdf-textLayer>div .pdf-slide-progress{position:absolute;top:0;left:0;right:0;height:3px}.pdf-textLayer>div .pdf-slide-progress-bar{width:0;height:3px;background-color:#44a4dd;-webkit-transition:width 50ms ease-out;-moz-transition:width 50ms ease-out;-o-transition:width 50ms ease-out;transition:width 50ms ease-out}.pdf-annotationLayer a{display:block;position:absolute;height:100%;width:100%}.pdf-annotationLayer a:hover{opacity:.2;background:#ff0;box-shadow:0 2px 10px #ff0}.pdf-canvas{width:100%;height:100%;opacity:1;-webkit-transition:width .3s ease-in;-moz-transition:width .3s ease-in;-o-transition:width .3s ease-in;transition:width .3s ease-in}.pdf-slide-progress{height:3px}.pdf-slide-progress-bar{width:0;height:8px;background-color:#44a4dd;-webkit-transition:width 50ms linear;-moz-transition:width 50ms linear;-o-transition:width 50ms linear;transition:width 50ms linear}@-webkit-keyframes spin{from{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}.pdf-loading-hidden{display:none}.pdf-loading{margin-top:-1rem;margin-left:-1rem;border:1px solid #797673;border-radius:51%;position:absolute;top:50%;left:50%;width:4rem;height:4rem;-webkit-animation:1s linear infinite spin;animation:1s linear infinite spin}.pdf-loading::before{display:block;position:absolute;width:50%;height:50%;content:"";background-color:#fff}</style>
+<!--<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">-->
+<style>@font-face{font-family:'Material Icons';font-style:normal;font-weight:400;src:local('Material Icons'),local('MaterialIcons-Regular'),url(https://fonts.gstatic.com/s/materialicons/v22/2fcrYFNaTjcS6g4U3t-Y5StnKWgpfO2iSkLzTz-AABg.ttf) format('truetype')}.material-icons{font-family:'Material Icons';font-weight:400;font-style:normal;font-size:24px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr}</style>
 
-<!-- Only for Slides -->
-<main>
-  <div class="slides-wrapper fullscreen">
-    <div id="slides" class="inactive"></div>
-  </div>
-  <div id="dropzone" class="inactive dropzone fullscreen">
-    <div class="drop-here page-icon">
-      <i class="material-icons">picture_as_pdf</i>
-      <div>Drag your PDF file and drop here.</div>
-    </div>
-  </div>
-</main>
+</head>
+<body>
 
-<div class="bottom-nav inactive" id="bottom-nav">
-  <a class="bottom-nav-button" id="js-show-setup-modal-button">
-    <i class="material-icons">phonelink_setup</i>
-    <div>Setup</div>
-  </a>
-  <a class="bottom-nav-button" id="js-fullscreen-button">
-    <i class="material-icons">settings_overscan</i>
-    <div>Fullscreen</div>
-  </a>
-  <a class="bottom-nav-button">
-    <i class="material-icons">live_help</i>
-    <div>Tutorial</div>
-  </a>
-  <a class="bottom-nav-button" href="/">
-    <i class="material-icons">clear</i>
-    <div>Reset</div>
-  </a>
-</div>
-
-<!-- Only for Controller -->
-<div id="touchzone" class="touchzone fullscreen inactive">
-  <div class="touch-here page-icon">
-    <i class="material-icons">touch_app</i>
-    <div>Swipe to flip through slides.</div>
-  </div>
-  <div class="progress fullscreen active" id="auth-progress">
-    <div class="progress-bar"></div>
-  </div>
-</div>
-
-<!-- setup dialog -->
-<div class="dialog-backdrop fullscreen" id="setup-dialog-backdrop"></div>
-<div class="dialog" id="setup-dialog">
-  <header class="dialog-title">Setup Link</header>
-  <main class="dialog-content">
-    <a id="control-link" target="_blank"></a>
-    <div id="setup-qrcode"></div>
-    <div>Open this link on your smartphone. Also you can open the link by <a href="https://en.wikipedia.org/wiki/QR_code" target="_blank">QR code</a>.</div>
-  </main>
-  <div class="progress fullscreen active" id="dialog-progress">
-    <div class="progress-bar"></div>
+<div id="app">
+  <div class="loading-container">
+    <div class="loading"></div>
   </div>
 </div>
-<!-- setup dialog -->
-<div class="dialog-backdrop fullscreen" id="message-dialog-backdrop"></div>
-<div class="dialog" id="message-dialog">
-  <main class="dialog-content">
-  </main>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/screenfull.js/3.0.2/screenfull.min.js"></script>
-<script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/04f46c6a0708418cb7b96fc563eacae0fbf77674/qrcode.min.js"></script>
+<script>
+  setTimeout(function() {
+    var loading = document.querySelector('.loading');
+    if (loading) { loading.classList.add('-show'); }
+  }, 1000);
+</script>
+<script src="/index.js"></script>
+
+</body>

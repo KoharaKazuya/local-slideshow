@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('fs');
 const log4js = require('log4js');
 const url = require('url');
 const app = require('http').createServer(handler);
@@ -21,7 +22,7 @@ appLogger.info('start to listen 8081');
 app.listen(8081);
 
 appLogger.info('static files published from /public');
-const fileServer = new nodeStatic.Server('./public', { gzip: true });
+const fileServer = new nodeStatic.Server('./public');
 
 // room id is [0, 2**24-1] integer
 const rooms = {};
@@ -41,27 +42,17 @@ function isRoomExist(roomId) {
 
 function handler(req, res) {
   reqLogger.debug(CircularJSON.stringify(req));
+  reqLogger.info(`header: ${ CircularJSON.stringify(req.headers) }`);
   const requestUrl = url.parse(req.url)
   const pathname = requestUrl.pathname;
-  reqLogger.info(`header: ${ CircularJSON.stringify(req.headers) }`);
+  const filename = pathname.split('/').slice(-1)[0];
+  reqLogger.debug(pathname);
+  reqLogger.debug(filename);
 
-  if (req.method === 'GET' && pathname.match(/^\/rooms\/\d+/)) {
-    const roomId = Number(pathname.match(/^\/rooms\/(\d+)/)[1]);
-
-    if (isRoomExist(roomId)) {
-      res.writeHead(200);
-      res.end(CircularJSON.stringify(rooms[roomId]));
-    } else {
-      res.writeHead(404);
-      res.end('page not found');
-    }
-
-  } else if (req.method === 'GET' && pathname.match(/^\/slides\/\d+/)) {
-    const roomId = Number(pathname.match(/^\/slides\/(\d+)/)[1]);
-    appLogger.debug('TODO: Implement ' + roomId);
-  } else if (req.method === 'GET' && pathname.match(/^\/controller\/\d+/)) {
-    const roomId = Number(pathname.match(/^\/controller\/(\d+)/)[1]);
-    appLogger.debug('TODO: Implement ' + roomId);
+  if (req.method === 'GET' && (pathname == '/' || pathname.match(/^\/controller\/\d+$/))) {
+    fileServer.serveFile('/index.html', 200, {}, req, res);
+  } else if (fs.existsSync('public/' + filename)) {
+    fileServer.serveFile('/' + filename, 200, {}, req, res);
   } else {
     // static files
     req.addListener('end', () => fileServer.serve(req, res)).resume();
@@ -82,7 +73,7 @@ io.on('connection', socket => {
 
       appLogger.info('num of room: ' + Object.keys(rooms).length);
       actLogger.debug('send ROOM_JOINED ' + roomId);
-      socket.send({ type: 'ROOM_JOINED', roomId });
+      socket.send({ type: 'ROOM_JOINED', payload: { roomId }, meta: {} });
 
       // 部屋を作ったので、コネクションが閉じたときに部屋を消すように
       socket.on('disconnect', () => {
@@ -92,20 +83,22 @@ io.on('connection', socket => {
     }
 
     if (message.type === 'JOIN_ROOM') {
-      if (!isRoomExist(message.roomId)) {
-        actLogger.debug('room not found: ' + message.roomId);
+      if (!isRoomExist(message.payload.roomId)) {
+        actLogger.debug('room not found: ' + message.payload.roomId);
         return;
       }
 
-      roomId = message.roomId;
+      roomId = message.payload.roomId;
       socket.join(roomId);
 
       actLogger.debug('send ROOM_JOINED ' + roomId);
-      socket.send({ type: 'ROOM_JOINED', roomId });
+      socket.send({ type: 'ROOM_JOINED', payload: { roomId }, meta: {} });
     }
 
-    if (message.type === 'PAGE_CONTROL' && typeof roomId === 'number') {
-      io.to(roomId).send({ type: 'PAGE_CONTROL', action: message.action });
+    if (['NEXT_PAGE_REQUEST', 'PREV_PAGE_REQUEST'].indexOf(message.type) >= 0 && typeof roomId === 'number') {
+      const type = message.type.replace(/(.*)_REQUEST/, "$1");
+      actLogger.debug('[room message ' + roomId + ']: ' + type);
+      io.to(roomId).send({ type , payload: {}, meta: {} });
     }
   });
 });

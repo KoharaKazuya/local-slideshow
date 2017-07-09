@@ -1,0 +1,30 @@
+@import "../variables";
+
+.dropzone {
+  background-color: #fff;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.page-icon {
+  color: var(--text-secondary-color);
+  left: 0;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  transform: translate(0, -50%);
+  transition: color 0.2s linear;
+  width: 100%;
+}
+
+.page-icon.active {
+  color: var(--accent-color);
+}
+
+.page-icon :global(.material-icons) {
+  font-size: 6rem;
+  margin: 0 0 1rem;
+}

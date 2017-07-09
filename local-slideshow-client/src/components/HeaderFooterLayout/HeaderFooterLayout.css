@@ -1,0 +1,25 @@
+@import "../variables";
+
+.container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-flow: column;
+  justify-content: stretch;
+}
+
+.header,
+.footer {
+  flex: 0 0 auto;
+  z-index: var(--z-layer-layout);
+}
+
+.content {
+  flex: 1 1 auto;
+  position: relative;
+  overflow: auto;
+  z-index: var(--z-layer-main);
+}

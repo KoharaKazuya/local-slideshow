@@ -1,3 +1,14 @@
 {
-  "extends": "tslint:recommended"
+  "extends": ["tslint:recommended", "tslint-react"],
+  "rulesDirectory": ["lint/tslint"],
+  "rules": {
+    "interface-name": [true, "never-prefix"],
+    "ordered-imports": [false],
+    "object-literal-sort-keys": false,
+    "no-var-requires": false,
+    "jsx-curly-spacing": "always",
+    "jsx-no-lambda": false,
+    "jsx-no-multiline-js": false,
+    "component-doc": true
+  }
 }

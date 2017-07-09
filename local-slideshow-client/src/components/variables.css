@@ -1,0 +1,17 @@
+:root {
+  --text-primary-color:   rgba(0, 0, 0, 0.87);
+  --text-secondary-color: rgba(0, 0, 0, 0.54);
+  --text-disabled-color:  rgba(0, 0, 0, 0.38);
+  --text-hint-color:      rgba(0, 0, 0, 0.38);
+
+  --primary-color:     #795548;
+  --primary-color-100: #d7ccc8;
+  --accent-color:      #4caf50;
+
+  --z-layer-background: -1;
+  --z-layer-main:        0;
+  --z-layer-float:       1;
+  --z-layer-layout:      2;
+  --z-layer-modal-back:  3;
+  --z-layer-modal:       4;
+}

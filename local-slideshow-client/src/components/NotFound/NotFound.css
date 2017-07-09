@@ -1,0 +1,23 @@
+@import "../variables";
+
+.container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero {
+  color: var(--text-secondary-color);
+  margin: 0 0 3rem;
+}
+
+.hero :global(.material-icons) {
+  font-size: 6rem;
+  margin: 0 0 1rem;
+}

@@ -1,0 +1,31 @@
+@import "../variables";
+
+.touchzone {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: #fff;
+}
+
+.page-icon {
+  color: var(--text-secondary-color);
+  left: 0;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  transform: translate(0, -50%);
+  transition: color 0.2s linear;
+  width: 100%;
+}
+
+.page-icon.active {
+  color: var(--accent-color);
+  transition: none;
+}
+
+.page-icon :global(.material-icons) {
+  font-size: 6rem;
+  margin: 0 0 1rem;
+}
